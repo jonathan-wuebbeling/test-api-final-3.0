@@ -1,143 +1,223 @@
-#include <LiquidCrystal.h> 
-#include <IRremote.h> 
- 
-int RECV_PIN = 31; 
-IRrecv irrecv(RECV_PIN); 
-decode_results results; 
-LiquidCrystal lcd(30,36,42,44,45,43); 
- 
-void setup()  
-{ 
-  Serial.begin(9600); 
-  lcd.begin(16,2); 
-  irrecv.enableIRIn();                                    //Reciever starten 
-} 
- 
-void loop()  
-{ 
- while(results.value != 16761405)                         //Schleife, um Eingabe zu beginnen, bzw Aufforderung bis Eingabe getätigt wurde 
-  { 
-   lcd.setCursor(0,0); 
-   lcd.print("Eingabe bitte");                            //Aufforderung zur Eingabe auf dem Display 
-    
-   if (irrecv.decode(&results))                           //Decodieren des IR-Signals zur Überprüfung 
-    { 
-      Serial.println(results.value, DEC);                 //Ausgabe des Wertes als DEC-Zahl auf dem seriellen Monitor 
-      irrecv.resume();                                    //Den nächsten Wert emfangen 
-    } 
-       
-   if(results.value == 16738455) 
-    {  
-       lcd.clear(); 
-       lcd.setCursor(0,0);                                //Erste Zeile 
-       lcd.print("Menuauswahl: "); 
-       lcd.setCursor(0,1);                                //Zweite Zeile 
-       lcd.print("1.Thore, 2.Laura"); 
-       delay (2000);                                      //2 Sekunden warten 
-       lcd.clear();                                       //Display löschen 
- 
-       lcd.setCursor(0,0);          
-       lcd.print("Menuauswahl: "); 
-       lcd.setCursor(0,1);          
-       lcd.print("3.Jona, 4.Lukas"); 
-       delay (2000);               
-       lcd.clear();                 
- 
-       lcd.setCursor(0,0);          
-       lcd.print("Menuauswahl: "); 
-       lcd.setCursor(0,1);          
-       lcd.print("5.Dominik"); 
-       delay (2000);                
-       lcd.clear(); 
-    } 
+#include <LiquidCrystal.h>
+#include <IRremote.h>
+
+int RECV_PIN = 31;
+IRrecv irrecv(RECV_PIN);
+decode_results results;
+LiquidCrystal lcd(30,36,42,44,45,43);
+
+void setup() 
+{
+  Serial.begin(9600);
+  lcd.begin(16,2);
+  irrecv.enableIRIn();                                    //Reciever starten
+  dht.begin();                                            //Feuchtigkeitssensor starten
+
+}
+
+void loop() 
+{
+ while(results.value != 16761405)                         //Schleife, um Eingabe zu beginnen, bzw Aufforderung bis Eingabe getätigt wurde
+  {
+   lcd.setCursor(0,0);
+   lcd.print("Eingabe bitte");                            //Aufforderung zur Eingabe auf dem Display
    
-  if(results.value == 16724175)                           //Thores Quelltext, Programm Nr.1 
-    {  
-      lcd.clear();                                        //Eingabeaufforderung auf dem Display löschen 
-       
-        while(results.value != 16761405)                  //Schleife des Programms bis zu manuellen Beendigung mit der "Play"-Taste 
-          { 
-            lcd.setCursor(0,0); 
-            lcd.print("Thores Pro");                      //Programmplatzhalter 
-             
-              if (irrecv.decode(&results))                //Eingabe zum Beenden am Ende des Programms 
-                { 
-                  Serial.println(results.value, DEC);     //Ausgabe des Wertes als DEC-Zahl auf dem seriellen Monitor 
-                  irrecv.resume();                        //Den nächsten Wert emfangen 
-                }   
-          } 
-    }  
-  if(results.value==16718055)                             //Lauras Quelltext, Programm Nr.2 
+   if (irrecv.decode(&results))                           //Decodieren des IR-Signals zur Überprüfung
+    {
+      Serial.println(results.value, DEC);                 //Ausgabe des Wertes als DEC-Zahl auf dem seriellen Monitor
+      irrecv.resume();                                    //Den nächsten Wert emfangen
+    }
+      
+   if(results.value == 16738455)
     { 
-      lcd.clear();                                        //Eingabeaufforderung auf dem Display löschen 
-       
-        while(results.value != 16761405)                  //Schleife des Programms bis zu manuellen Beendigung mit der "Play"-Taste 
-          { 
-            lcd.setCursor(0,0); 
-            lcd.print("Prinzessin");                      //Programmplatzhalter 
-             
-              if (irrecv.decode(&results)) 
-                { 
-                  Serial.println(results.value, DEC);     //Ausgabe des Wertes als DEC-Zahl auf dem seriellen Monitor 
-                  irrecv.resume();                        //Den nächsten Wert emfangen 
-                } 
-           } 
-    } 
- 
- 
-  if (results.value==16743045)                            //Jonathans Quelltext, Programm Nr.2 
-    { 
-      lcd.clear();                                        //Eingabeaufforderung auf dem Display löschen 
-       
-        while(results.value != 16761405)                  //Schleife des Programms bis zu manuellen Beendigung mit der "Play"-Taste 
-          { 
-            lcd.setCursor(0,0); 
-            lcd.print("Engel <3");                        //Programmplatzhalter 
-             
-               if (irrecv.decode(&results))  
-                 { 
-                  Serial.println(results.value, DEC);     //Ausgabe des Wertes als DEC-Zahl auf dem seriellen Monitor 
-                  irrecv.resume();                        //Den nächsten Wert emfangen 
-                 } 
-          } 
-    } 
- 
- 
-  if(results.value==16716015)                             //Lukas Quelltext, Programm Nr.4 
-    { 
-      lcd.clear();                                        //Eingabeaufforderung auf dem Display löschen 
-    
-        while(results.value != 16761405)                  //Schleife des Programms bis zu manuellen Beendigung mit der "Play"-Taste 
-          { 
-            lcd.setCursor(0,0); 
-            lcd.print("Kampfstachel");                    //Programmplatzhalter 
-             
-              if (irrecv.decode(&results))  
-                { 
-                 Serial.println(results.value, DEC);      //Ausgabe des Wertes als DEC-Zahl auf dem seriellen Monitor 
-                 irrecv.resume();                         //Den nächsten Wert emfangen 
-                } 
-          } 
-    } 
- 
-  if(results.value==16726215)                             //Dominik Quelltext, Programm Nr.5 
-    { 
-      lcd.clear();                                        //Eingabeaufforderung auf dem Display löschen 
-       
-        while(results.value != 16761405)                  //Schleife des Programms bis zu manuellen Beendigung mit der "Play"-Taste 
-          { 
-            lcd.setCursor(0,0); 
-            lcd.print("Dominique");                       //Programmplatzhalter 
-               
-              if (irrecv.decode(&results))  
-                { 
-                 Serial.println(results.value, DEC);      //Ausgabe des Wertes als DEC-Zahl auf dem seriellen Monitor 
-                 irrecv.resume();                         //Den nächsten Wert emfangen  
-                } 
-          } 
-    } 
-  }  
-    
- lcd.clear();                                             //Mitteilung vor Ende des Loops löschen 
+       lcd.clear();
+       lcd.setCursor(0,0);                                //Erste Zeile
+       lcd.print("Menueauswahl: ");
+       lcd.setCursor(0,1);                                //Zweite Zeile
+       lcd.print("1.Thore");
+       delay (2000);                                      //2 Sekunden warten
+       lcd.clear();                                       //Display löschen
+
+       lcd.setCursor(0,0);         
+       lcd.print("Menueauswahl: ");
+       lcd.setCursor(0,1);         
+       lcd.print("2.Laura1");
+       delay (2000);              
+       lcd.clear();                
+
+       lcd.setCursor(0,0);         
+       lcd.print("Menueauswahl: ");
+       lcd.setCursor(0,1);         
+       lcd.print("3.Laura2");
+       delay (2000);               
+       lcd.clear();
+
+       lcd.setCursor(0,0);         
+       lcd.print("Menueauswahl: ");
+       lcd.setCursor(0,1);         
+       lcd.print("4.Jonathan");
+       delay (2000);               
+       lcd.clear();
+
+       lcd.setCursor(0,0);         
+       lcd.print("Menueauswahl: ");
+       lcd.setCursor(0,1);         
+       lcd.print("5.Lukas");
+       delay (2000);               
+       lcd.clear();
+
+       lcd.setCursor(0,0);         
+       lcd.print("Menueauswahl: ");
+       lcd.setCursor(0,1);         
+       lcd.print("6.Dominik");
+       delay (2000);               
+       lcd.clear();
+
+       lcd.setCursor(0,0);         
+       lcd.print("Menueauswahl: ");
+       lcd.setCursor(0,1);         
+       lcd.print("7.Thore2");
+       delay (2000);               
+       lcd.clear();
+    }
   
+  if(results.value == 16724175)                           //Thores Quelltext, Programm Nr.1
+    { 
+      lcd.clear();                                        //Eingabeaufforderung auf dem Display löschen
+      
+        while(results.value != 16761405)                  //Schleife des Programms bis zu manuellen Beendigung mit der "Play"-Taste
+          {
+            lcd.setCursor(0,0);
+            lcd.print("Thores Pro");                      //Programmplatzhalter
+            
+              if (irrecv.decode(&results))                //Eingabe zum Beenden am Ende des Programms
+                {
+                  Serial.println(results.value, DEC);     //Ausgabe des Wertes als DEC-Zahl auf dem seriellen Monitor
+                  irrecv.resume();                        //Den nächsten Wert emfangen
+                }  
+          }
+    } 
+  if(results.value==16718055)                             //Lauras Quelltext, Programm Nr.2
+    {
+      lcd.clear();                                        //Eingabeaufforderung auf dem Display löschen
+      
+        while(results.value != 16761405)                  //Schleife des Programms bis zu manuellen Beendigung mit der "Play"-Taste
+          {
+            lcd.setCursor(0,0);
+            lcd.print("Prinzessin");                      //Programmplatzhalter
+            
+              if (irrecv.decode(&results))
+                {
+                  Serial.println(results.value, DEC);     //Ausgabe des Wertes als DEC-Zahl auf dem seriellen Monitor
+                  irrecv.resume();                        //Den nächsten Wert emfangen
+                }
+           }
+    }
+
+
+  if (results.value==16743045)                            //Laura2 Quelltext, Programm Nr.3
+    {
+      lcd.clear();                                        //Eingabeaufforderung auf dem Display löschen
+      
+        while(results.value != 16761405)                  //Schleife des Programms bis zu manuellen Beendigung mit der "Play"-Taste
+          {
+            lcd.setCursor(0,0);
+            lcd.print("Prinzessin2");                        //Programmplatzhalter
+            
+               if (irrecv.decode(&results)) 
+                 {
+                  Serial.println(results.value, DEC);     //Ausgabe des Wertes als DEC-Zahl auf dem seriellen Monitor
+                  irrecv.resume();                        //Den nächsten Wert emfangen
+                 }
+          }
+    }
+
+
+  if(results.value==16716015)                             //Jonathan Quelltext, Programm Nr.4
+    {
+      lcd.clear();                                        //Eingabeaufforderung auf dem Display löschen
+   
+        while(results.value != 16761405)                  //Schleife des Programms bis zu manuellen Beendigung mit der "Play"-Taste
+          {
+              lcd.setCursor(0,0);
+              lcd.print("Engel <3");                        //Programmplatzhalter
+            
+            
+              if (irrecv.decode(&results)) 
+                {
+                 Serial.println(results.value, DEC);      //Ausgabe des Wertes als DEC-Zahl auf dem seriellen Monitor
+                 irrecv.resume();                         //Den nächsten Wert emfangen
+                }
+          }
+    }
+
+  if(results.value==16726215)                             //Lukas Quelltext, Programm Nr.5
+    {
+      lcd.clear();                                        //Eingabeaufforderung auf dem Display löschen
+      
+        while(results.value != 16761405)                  //Schleife des Programms bis zu manuellen Beendigung mit der "Play"-Taste
+          {
+            lcd.setCursor(0,0);
+            lcd.print("Kampfstachel");                       //Programmplatzhalter
+              
+              if (irrecv.decode(&results)) 
+                {
+                 Serial.println(results.value, DEC);      //Ausgabe des Wertes als DEC-Zahl auf dem seriellen Monitor
+                 irrecv.resume();                         //Den nächsten Wert emfangen 
+                }
+          }
+    }
+  if(results.value==16734885)                             //Dominik Quelltext, Programm Nr.6
+    {
+      lcd.clear();                                        //Eingabeaufforderung auf dem Display löschen
+      
+        while(results.value != 16761405)                  //Schleife des Programms bis zu manuellen Beendigung mit der "Play"-Taste
+          {
+            lcd.setCursor(0,0);
+            lcd.print("Dominique");                       //Programmplatzhalter
+              
+              if (irrecv.decode(&results)) 
+                {
+                 Serial.println(results.value, DEC);      //Ausgabe des Wertes als DEC-Zahl auf dem seriellen Monitor
+                 irrecv.resume();                         //Den nächsten Wert emfangen 
+                }
+          }
+    }
+    if(results.value==16728765)                             //Thore2 Quelltext, Programm Nr.7
+    {
+      lcd.clear();                                        //Eingabeaufforderung auf dem Display löschen
+      
+        while(results.value != 16761405)                  //Schleife des Programms bis zu manuellen Beendigung mit der "Play"-Taste
+          {
+            lcd.setCursor(0,0);
+            lcd.print("Thore2");                       //Programmplatzhalter
+              
+              if (irrecv.decode(&results)) 
+                {
+                 Serial.println(results.value, DEC);      //Ausgabe des Wertes als DEC-Zahl auf dem seriellen Monitor
+                 irrecv.resume();                         //Den nächsten Wert emfangen 
+                }
+          }
+    }
+  } 
+
+   
+ lcd.clear();                                             //Letzten Text vom gestarteten Programm auf dem Display löschen
+ lcd.setCursor(0,0);
+ lcd.print("Systemneustart");                             //Mitteilung an den Nutzer, dass gleich ein neues Programm gestartet werden kann
+ lcd.setCursor(0,1);
+ lcd.print("Bitte warten");
+ 
+ delay(5000);
+ lcd.clear();                                             //Mitteilung vor Ende des Loops löschen
+ 
+ while(results.value == 16761405)                         //Schleife, um den Wert von "results" automatisch zu verändern
+  {                                                       //Sodass results.value nicht mehr den Wert der "Play"-Taste zugewiesen hat
+   if (irrecv.decode(&results))
+    {
+     Serial.println(results.value, DEC);                  //Ausgabe des Wertes als DEC-Zahl auf dem seriellen Monitor
+     irrecv.resume();                                     //Den nächsten Wert emfangen
+    }
+  }
+ 
 }
