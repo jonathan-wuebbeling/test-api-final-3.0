@@ -171,15 +171,15 @@ if (sensorWert < 204 )//sehr dunkel
     Serial.print("Sonnenschutz: --");
   }
 
-if (204 < sensorWert < 408)//etwas heller aber noch nahezu dunkel
+if (sensorWert >204 && sensorWert < 408)//etwas heller aber noch nahezu dunkel
   {
     Serial.print("Sonnenschutz: -");
   }
-if (408 < sensorWert < 612)//hell, vergleichbar mit im Schatten vorm Tentomax sitzend
+if (sensorWert > 408 && sensorWert < 612)//hell, vergleichbar mit im Schatten vorm Tentomax sitzend
   {
     Serial.print("Sonnenschutz: o");
   }
-if (612 < sensorWert < 816)//hell, direkte Sonneneinstrahlung
+if (sensorWert > 612 && sensorWert < 816)//hell, direkte Sonneneinstrahlung
   {
     Serial.print("Sonnenschutz: +");
   }
