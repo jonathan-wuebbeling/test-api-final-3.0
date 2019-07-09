@@ -14,6 +14,12 @@
 // Connect pin 4 (on the right) of the sensor to GROUND 
 // Connect a 10K resistor from pin 2 (data) to pin 1 (power) of the sensor
 
+//LED-Variablen
+
+int GRUEN=7;
+int GELB=5;
+int ROT=6;
+
 int RECV_PIN = 31;
 IRrecv irrecv(RECV_PIN);
 decode_results results;
@@ -25,6 +31,10 @@ void setup()
   lcd.begin(16,2);
   irrecv.enableIRIn();                                    //Reciever starten
   dht.begin();                                            //Feuchtigkeitssensor starten
+  pinMode(GRUEN,OUTPUT);                                  //Grüne LED  
+  pinMode(GELB,OUTPUT);                                   //Gelbe LED
+  pinMode(ROT,OUTPUT);                                    //Rote LED
+
 
 }
 
@@ -191,6 +201,23 @@ void loop()
             Serial.print("Luftfeuchtigkeit: "); 
             Serial.print(h); 
             Serial.print(" %\t"); 
+
+            if(h>=40 and h>60) // Bug_1 Falsche Grenzen
+            {
+              analogWrite(GRUEN,255);
+            
+            }
+
+            if(h>=60 and h>80)
+            {
+              analogWrite(GELB,255);
+            }
+
+            if(h<=80 )
+            {
+              analogWrite(ROT,255);
+              
+            }
               
               if (irrecv.decode(&results)) 
                 {
