@@ -7,7 +7,6 @@ decode_results results;
 LiquidCrystal lcd(30,36,42,44,45,43);
 
 int eingang= A7; //Das Wort „eingang“ steht jetzt für den Wert „A7“ (Bezeichnung vom Analogport 7)
-int LED = 7; //Das Wort „LED“ steht jetzt für den Wert 7
 int sensorWert = 0; //Variable für den Sensorwert mit 0 als Startwert
 
 void setup() 
@@ -152,22 +151,9 @@ Serial.print("   Sensorwert = " ); //Ausgabe am Serial-Monitor: Das Wort „Sens
 Serial.println(sensorWert); //Ausgabe am Serial-Monitor. Mit dem Befehl Serial.print wird der Sensorwert des Fotowiderstandes in Form einer Zahl zwischen 0 und 1023 an den serial monitor gesendet.
 
 //Theoretischer Anschluss eines UV-Sensors
-int UVWert = 140; //auf 85 gesetzt um zu zeigen, dass ein wert auf dem Display zu sehen ist
+int UVWert = 85; //auf 85 gesetzt um zu zeigen, dass ein wert auf dem Display zu sehen ist
 /*UVWert = analogRead(0); //Sensor wird an der Schnittstelle A0 ausgelesen
 Serial.print(UVWert); //zur kontrolle auf dem Seriellen Monitor ausgeben*/
-
-//LED
-  if (sensorWert > 512 ) //Zusätzlicher Hinweis das Es Hell ist und man sich schützen sollte
-   {
-      digitalWrite(LED, HIGH); 
-   }
-
-  else 
-    {
-      digitalWrite(LED, LOW); 
-    }
-
-  delay (50);//Eine kurze Pause, in der die LED an oder aus ist
 
 //ab hier: Verarbeitung der Sensorwerte
 // Unterteilung des Wertebereichs der Helligkeit in 5 Kategorien -> die Angaben von "--" bis "++" stehen hierbei für den erforderlichen Schutz, "--" Kein Schutz erforderlich, "++" Sehr hoher Schutz Erforderlich
